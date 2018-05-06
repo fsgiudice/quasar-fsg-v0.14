@@ -44,8 +44,8 @@ export default {
             body = this.$refs.body,
             size = getScrollbarWidth()
 
-          this.scroll.horiz = size && body.clientWidth < body.scrollWidth ? size + 'px' : 0
-          this.scroll.vert = size && body.scrollHeight > body.clientHeight ? size + 'px' : 0
+          this.scroll.horiz = size && (body && body.clientWidth < body.scrollWidth) ? size + 'px' : 0
+          this.scroll.vert = size && (body && body.scrollHeight > body.clientHeight) ? size + 'px' : 0
         })
       })
     },
