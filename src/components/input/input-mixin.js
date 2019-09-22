@@ -5,7 +5,11 @@ export default {
     maxLength: [Number, String],
     maxHeight: Number,
     placeholder: String,
-    loading: Boolean
+    loading: Boolean,
+    autocapitalize: String, // as suggested from https://forum.quasar-framework.org/topic/928/q-input-turn-off-spellcheck-capitalization-autocorrect/4
+    autocomplete: String,
+    autocorrect: String,
+    spellcheck: String
   },
   computed: {
     inputPlaceholder () {
