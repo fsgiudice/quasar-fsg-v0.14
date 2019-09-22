@@ -67,6 +67,10 @@
       :disabled="disable"
       :readonly="readonly"
       :maxlength="maxLength"
+      :autocapitalize="autocapitalize"
+      :autocomplete="autocomplete"
+      :autocorrect="autocorrect"
+      :spellcheck="spellcheck"
       v-bind="attributes"
 
       :min="min"
