@@ -8,7 +8,8 @@ function getRowSelection (rows, selection, multiple) {
 export default {
   data () {
     return {
-      rowSelection: []
+      rowSelection: [],
+      rowAllSelected: false
     }
   },
   created () {
@@ -66,12 +67,31 @@ export default {
     }
   },
   methods: {
+    selectAllRows (value) {
+      // console.log('method selectAllRows:', value)
+      this.rowAllSelected = value
+      if (value) {
+        this.rowsSelectAll()
+      }
+      else {
+        this.rowsUnselectAll()
+      }
+    },
+    rowsSelectAll () {
+      // console.log('rowsSelectAll')
+      this.rowSelection = this.rows.map(() => true)
+    },
+    rowsUnselectAll () {
+      // console.log('rowsUnselectAll')
+      this.rowSelection = this.rows.map(() => false)
+    },
     clearSelection () {
       if (!this.multipleSelection) {
         this.rowSelection = [-1]
         return
       }
       this.rowSelection = this.rows.map(() => false)
+      this.rowAllSelected = false
     },
     emitRowClick (row) {
       this.$emit('rowclick', row)

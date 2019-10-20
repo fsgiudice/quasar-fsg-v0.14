@@ -1,13 +1,16 @@
 <template>
   <table class="q-table horizontal-separator" :style="tableStyle">
     <colgroup>
-      <col v-if="selection" style="width: 45px;" />
+      <col v-if="selection" style="width: 36px;" />
       <col v-for="col in cols" :style="{width: col.width}" />
       <col v-if="head && scroll.horiz" :style="{width: scroll.horiz}" />
     </colgroup>
     <thead v-if="head">
       <tr>
-        <th v-if="selection">&nbsp;</th>
+        <th v-if="selection">
+          <q-checkbox v-if="selection === 'multiple'" v-model="selectAll"></q-checkbox>
+          <span v-else>&nbsp;</span>
+        </th>
         <th
           v-for="col in cols"
           :class="{sortable: col.sort}"
@@ -33,11 +36,13 @@
 <script>
 import SortIcon from './plugins/sort/SortIcon.vue'
 import { QTooltip } from '../tooltip'
+import { QCheckbox } from '../checkbox'
 
 export default {
   name: 'q-table-content',
   components: {
     SortIcon,
+    QCheckbox,
     QTooltip
   },
   props: {
@@ -45,7 +50,22 @@ export default {
     head: Boolean,
     sorting: Object,
     scroll: Object,
-    selection: [String, Boolean]
+    selection: [String, Boolean],
+    rowAllSelection: Boolean
+  },
+  data () {
+    return {
+      selectAll: this.rowAllSelection
+    }
+  },
+  watch: {
+    rowAllSelection (value) {
+      this.selectAll = value
+    },
+    selectAll (value) {
+      // console.log('watch selectAll:', value)
+      this.$emit('selectAllRows', value)
+    }
   },
   computed: {
     tableStyle () {

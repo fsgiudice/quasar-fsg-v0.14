@@ -61,7 +61,7 @@
 
     <div v-else class="q-data-table-container" @wheel="mouseWheel" @mousewheel="mouseWheel" @DOMMouseScroll="mouseWheel">
       <div v-if="hasHeader" class="q-data-table-head" ref="head" :style="{marginRight: scroll.vert}">
-        <table-content head :cols="cols" :sorting="sorting" :scroll="scroll" :selection="config.selection" @sort="setSortField"></table-content>
+        <table-content head :cols="cols" :sorting="sorting" :scroll="scroll" :selection="config.selection" @sort="setSortField" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected"></table-content>
       </div>
       <div
         class="q-data-table-body"
@@ -90,7 +90,7 @@
           ref="stickyLeft"
           :style="{bottom: scroll.horiz}"
         >
-          <table-sticky :no-header="!hasHeader" :sticky-cols="leftStickyColumns" :cols="cols" :sorting="sorting" :selection="config.selection">
+          <table-sticky :no-header="!hasHeader" :sticky-cols="leftStickyColumns" :cols="cols" :sorting="sorting" :selection="config.selection" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected">
             <tr v-for="(row, index) in rows" :style="rowStyle" @click="emitRowClick(row)">
               <td v-if="config.selection">
                 <q-checkbox v-if="config.selection === 'multiple'" v-model="rowSelection[index]"></q-checkbox>
@@ -105,11 +105,12 @@
           </table-sticky>
         </div>
         <div v-if="hasHeader" class="q-data-table-sticky-left" :style="{bottom: scroll.horiz}">
-          <table-sticky head :sticky-cols="leftStickyColumns" :scroll="scroll" :cols="cols" :sorting="sorting" @sort="setSortField" :selection="config.selection"></table-sticky>
+          <table-sticky head :sticky-cols="leftStickyColumns" :scroll="scroll" :cols="cols" :sorting="sorting" @sort="setSortField" :selection="config.selection" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected"></table-sticky>
         </div>
       </template>
 
-      <template v-if="!message && rightStickyColumns">
+      <!-- TOFIX: currently disabled right sticky columns as there is an error on building header -->
+      <!--template v-if="!message && rightStickyColumns">
         <div
           class="q-data-table-sticky-right"
           ref="stickyRight"
@@ -130,7 +131,7 @@
         <div v-if="hasHeader" class="q-data-table-sticky-right" :style="{right: scroll.vert}">
           <table-sticky right head :sticky-cols="rightStickyColumns" :scroll="scroll" :cols="cols" :sorting="sorting" @sort="setSortField" :selection="config.selection"></table-sticky>
         </div>
-      </template>
+      </template-->
     </div>
 
     <table-pagination v-if="config.pagination" :pagination="pagination" :entries="pagination.entries" :labels="labels"></table-pagination>
