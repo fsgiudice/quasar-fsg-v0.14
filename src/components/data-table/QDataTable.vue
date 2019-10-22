@@ -91,12 +91,12 @@
           :style="{bottom: scroll.horiz}"
         >
           <table-sticky :no-header="!hasHeader" :sticky-cols="leftStickyColumns" :cols="cols" :sorting="sorting" :selection="config.selection" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected">
-            <tr v-for="(row, index) in rows" :style="rowStyle" @click="emitRowClick(row)">
+            <tr v-for="(row, index) in rows" :key="row.__lastUpdate" :style="rowStyle" @click="emitRowClick(row)">
               <td v-if="config.selection">
                 <q-checkbox v-if="config.selection === 'multiple'" v-model="rowSelection[index]"></q-checkbox>
                 <q-radio v-else v-model="rowSelection[0]" :val="index"></q-radio>
               </td>
-              <td v-for="col in leftCols" :style="formatStyle(col, row[col.field])" :class="formatClass(col, row[col.field])">
+              <td v-for="(col, index) in leftCols" :style="formatStyle(col, row[col.field])" :class="formatClass(col, row[col.field])">
                 <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
                   <span v-html="format(row, col)"></span>
                 </slot>
@@ -139,7 +139,7 @@
 </template>
 
 <script>
-import clone from '../../utils/clone'
+// import clone from '../../utils/clone'
 
 import ColumnSelection from './plugins/column-selection/column-selection'
 import Filter from './plugins/filter/filter'
@@ -197,10 +197,17 @@ export default {
         return []
       }
 
-      let rows = clone(this.data)
+      // let rows = clone(this.data) // no clone, as I can need to update real data
+      let rows = this.data
 
       rows.forEach((row, i) => {
         row.__index = i
+        // set lastUpdate as reactive
+        this.$set(row, '__lastUpdate', row.__index + '_' + Date.now() )
+        // add function to force update of row
+        row.__forceUpdate = () => {
+          row.__lastUpdate = row.__index + '_' + Date.now()
+        }
       })
 
       if (this.filtering.terms) {
