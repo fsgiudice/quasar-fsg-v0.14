@@ -8,7 +8,9 @@
       <tr>
         <th v-if="selection">
           <template v-if="!right">
-             <q-checkbox v-if="selection === 'multiple'" v-model="selectAll"></q-checkbox>
+             <q-checkbox v-if="selection === 'multiple'" v-model="selectAll">
+               <q-tooltip v-if="selectAllRowsLabel" v-html="selectAllRowsLabel"></q-tooltip>
+             </q-checkbox>
              <span v-else>&nbsp;</span>
           </template>
           <span v-else>&nbsp;</span>
@@ -58,7 +60,8 @@ export default {
     sorting: Object,
     scroll: Object,
     selection: [String, Boolean],
-    rowAllSelection: Boolean
+    rowAllSelection: Boolean,
+    selectAllRowsLabel: String
   },
 
   data () {

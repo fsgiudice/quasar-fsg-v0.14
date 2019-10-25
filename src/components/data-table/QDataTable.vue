@@ -61,7 +61,7 @@
 
     <div v-else class="q-data-table-container" @wheel="mouseWheel" @mousewheel="mouseWheel" @DOMMouseScroll="mouseWheel">
       <div v-if="hasHeader" class="q-data-table-head" ref="head" :style="{marginRight: scroll.vert}">
-        <table-content head :cols="cols" :sorting="sorting" :scroll="scroll" :selection="config.selection" @sort="setSortField" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected"></table-content>
+        <table-content head :cols="cols" :sorting="sorting" :scroll="scroll" :selection="config.selection" @sort="setSortField" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected" :selectAllRowsLabel="selectAllLabel"></table-content>
       </div>
       <div
         class="q-data-table-body"
@@ -90,7 +90,7 @@
           ref="stickyLeft"
           :style="{bottom: scroll.horiz}"
         >
-          <table-sticky :no-header="!hasHeader" :sticky-cols="leftStickyColumns" :cols="cols" :sorting="sorting" :selection="config.selection" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected">
+          <table-sticky :no-header="!hasHeader" :sticky-cols="leftStickyColumns" :cols="cols" :sorting="sorting" :selection="config.selection" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected" :selectAllRowsLabel="selectAllLabel">
             <tr v-for="(row, index) in rows" :key="row.__lastUpdate" :style="rowStyle" @click="emitRowClick(row)">
               <td v-if="config.selection">
                 <q-checkbox v-if="config.selection === 'multiple'" v-model="rowSelection[index]"></q-checkbox>
@@ -105,7 +105,7 @@
           </table-sticky>
         </div>
         <div v-if="hasHeader" class="q-data-table-sticky-left" :style="{bottom: scroll.horiz}">
-          <table-sticky head :sticky-cols="leftStickyColumns" :scroll="scroll" :cols="cols" :sorting="sorting" @sort="setSortField" :selection="config.selection" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected"></table-sticky>
+          <table-sticky head :sticky-cols="leftStickyColumns" :scroll="scroll" :cols="cols" :sorting="sorting" @sort="setSortField" :selection="config.selection" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected" :selectAllRowsLabel="selectAllLabel"></table-sticky>
         </div>
       </template>
 
@@ -238,6 +238,9 @@ export default {
     },
     hasHeader () {
       return !this.config.noHeader
+    },
+    selectAllLabel () {
+      return this.config && this.config.labels && this.config.labels.selectAllCheckBox
     }
   },
   methods: {
