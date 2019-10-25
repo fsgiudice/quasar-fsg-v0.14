@@ -2,7 +2,7 @@
   <div class="q-data-table">
     <template v-if="hasToolbar && toolbar === ''">
       <div class="q-data-table-toolbar upper-toolbar row reverse-wrap items-center justify-end">
-        <div v-if="config.title" class="q-data-table-title ellipsis col" v-html="config.title"></div>
+        <div v-if="config.format || config.title" class="q-data-table-title ellipsis col" v-html="displayFormat"></div>
         <div class="row items-center">
           <q-btn v-if="config.refresh && !refreshing" flat color="primary" @click="refresh">
             <q-icon name="refresh"></q-icon>
@@ -241,6 +241,19 @@ export default {
     },
     selectAllLabel () {
       return this.config && this.config.labels && this.config.labels.selectAllCheckBox
+    },
+    displayFormat () {
+      let f = this.config.format || '%T'
+      f = f.replace('%T', this.config.title)
+      f = f.replace('%N', this.rows.length)
+      if (this.config.labels && this.config.labels.textNumber) {
+        f = f.replace('%text_number', this.rows.length === 1 ? this.config.labels.textNumber.singular || '' : this.config.labels.textNumber.plural || '')
+      }
+      else {
+        f = f.replace('%text_number', '')
+      }
+
+      return f
     }
   },
   methods: {
