@@ -89,7 +89,7 @@ export default {
     },
     rowsSelectAll () {
       // console.log('rowsSelectAll')
-      this.rowSelection = this.rows.map(() => true)
+      this.rowSelection = this.rows.map((row) => (typeof this.config.selectable === 'function' ? this.config.selectable(row) : true))
     },
     rowsUnselectAll () {
       // console.log('rowsUnselectAll')
