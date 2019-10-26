@@ -79,6 +79,10 @@ export default {
   methods: {
     selectAllRows (value) {
       // console.log('method selectAllRows:', value)
+      if (!this.multipleSelection) {
+        this.rowAllSelected = false
+        return
+      }
       this.rowAllSelected = value
       if (value) {
         this.rowsSelectAll()
