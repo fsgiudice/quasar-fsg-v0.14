@@ -170,7 +170,7 @@ export default {
   mixins: [ColumnSelection, Filter, I18n, Pagination, Responsive, RowSelection, Scroll, Sort, StickyColumns],
   props: {
     data: {
-      type: Array,
+      type: [Array, Function],
       default () { return [] }
     },
     columns: {
