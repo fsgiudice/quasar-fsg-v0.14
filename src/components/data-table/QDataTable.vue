@@ -208,6 +208,17 @@ export default {
         row.__forceUpdate = () => {
           row.__lastUpdate = row.__index + '_' + Date.now()
         }
+        // add function to select/unselect row
+        row.__select = () => {
+          this.rowSelection[row.__index] = true
+          this.updateSelection()
+          row.__lastUpdate = row.__index + '_' + Date.now()
+        }
+        row.__unselect = () => {
+          this.rowSelection[row.__index] = false
+          this.updateSelection()
+          row.__lastUpdate = row.__index + '_' + Date.now()
+        }
       })
 
       if (this.filtering.terms) {

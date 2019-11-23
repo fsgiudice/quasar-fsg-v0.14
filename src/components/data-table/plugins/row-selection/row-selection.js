@@ -77,6 +77,20 @@ export default {
     }
   },
   methods: {
+    updateSelection () {
+      if (this.multipleSelection) {
+        this.rowSelection = this.rows.map((row,index) => this.rowSelection[index])
+      }
+
+      if (this.rowsSelected) {
+        this.toolbar = 'selection'
+        return
+      }
+      if (this.toolbar === 'selection') {
+        this.toolbar = ''
+      }
+    },
+
     selectAllRows (value) {
       // console.log('method selectAllRows:', value)
       if (!this.multipleSelection) {
