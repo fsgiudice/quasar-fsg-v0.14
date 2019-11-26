@@ -20,6 +20,8 @@ function show ({
   spinnerSize = 80,
   spinnerColor = 'white',
   messageColor = 'white',
+  messageClass = null,
+  messageStyle = null,
   spinner = QSpinner,
   customClass = false
 } = {}) {
@@ -28,6 +30,8 @@ function show ({
   props.spinnerSize = spinnerSize
   props.spinnerColor = spinnerColor
   props.messageColor = messageColor
+  props.messageClass = messageClass
+  props.messageStyle = messageStyle
 
   if (customClass && typeof customClass === 'string') {
     props.customClass = ` ${customClass.trim()}`
@@ -59,7 +63,8 @@ function show ({
 
         if (message) {
           child.push(h('div', {
-            staticClass: `text-${props.messageColor}`,
+            staticClass: props.messageClass ? props.messageClass : `text-${props.messageColor}`,
+            style: props.messageStyle,
             domProps: {
               innerHTML: props.message
             }
