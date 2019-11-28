@@ -18,9 +18,13 @@ export default {
   },
   watch: {
     'data' (value) {
-      if (typeof value !== 'Array' || value.length === 0) {
-        this.rowAllSelected = false
-      }
+      // console.log('row-selection - dati modificati', value)
+      // if (typeof value !== 'Array' || value.length === 0) {
+      //   this.rowAllSelected = false
+      // }
+      this.clearSelection ()
+      this.rowAllSelected = false
+      this.rowSelection = getRowSelection(this.rows, this.config.selection, this.multipleSelection)
     },
     'rowsSelected' (value) {
       if (value === 0) {
