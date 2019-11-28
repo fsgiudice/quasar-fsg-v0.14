@@ -2,7 +2,8 @@ function getRowSelection (rows, selection, multiple) {
   if (!selection) {
     return []
   }
-  return multiple ? rows.map(() => false) : [-1]
+  let result = multiple ? rows.map((r) => [false, r.__index]) : [false, -1]
+  return result
 }
 
 export default {
@@ -52,25 +53,24 @@ export default {
     },
     rowsSelected () {
       if (this.multipleSelection) {
-        return this.rowSelection.filter(r => r).length
+        return this.rowSelection.filter(r => r[0]).length
       }
-      return this.rowSelection.length && this.rowSelection[0] !== -1 ? 1 : 0
+      return this.rowSelection.length && this.rowSelection[0][0] ? 1 : 0
     },
     selectedRows () {
       if (this.multipleSelection) {
         return this.rowSelection
-          .map((selected, index) => [selected, this.rows[index].__index])
           .filter(row => row[0])
           .map(row => {
             return { index: row[1], data: this.data[row[1]] }
           })
       }
 
-      if (!this.rowSelection.length || this.rowSelection[0] === -1) {
+      if (!this.rowSelection.length || this.rowSelection[0][1] === -1) {
         return []
       }
       const
-        index = this.rows[this.rowSelection[0]].__index,
+        index = this.rowSelection[0][1],
         row = this.data[index]
 
       return [{index, data: row}]
@@ -79,7 +79,9 @@ export default {
   methods: {
     updateSelection () {
       if (this.multipleSelection) {
-        this.rowSelection = this.rows.map((row,index) => this.rowSelection[index])
+        // this.rowSelection = this.rows.map((row,index) => this.rowSelection[index])
+        // force to update
+        this.rowSelection = this.rowSelection.map(r => r)
       }
 
       if (this.rowsSelected) {
@@ -107,18 +109,31 @@ export default {
     },
     rowsSelectAll () {
       // console.log('rowsSelectAll')
-      this.rowSelection = this.rows.map((row) => (typeof this.config.selectable === 'function' ? this.config.selectable(row) : true))
+      // this.rowSelection = this.rows.map((row) => (typeof this.config.selectable === 'function' ? this.config.selectable(row) : true))
+      // debugger
+      this.rowSelection = this.rowSelection.map((r) => {
+        if (typeof this.config.selectable === 'function') {
+          let row = this.data[r[1]]
+          let isSelectable = this.config.selectable(row)
+          return [isSelectable, r[1]]
+        }
+        else {
+          return [true,r[1]]
+        }
+      })
     },
     rowsUnselectAll () {
       // console.log('rowsUnselectAll')
-      this.rowSelection = this.rows.map(() => false)
+      // this.rowSelection = this.rows.map(() => false)
+      this.rowSelection.map((r) => [false,r[1]])
     },
     clearSelection () {
       if (!this.multipleSelection) {
-        this.rowSelection = [-1]
+        this.rowSelection = [false, -1]
         return
       }
-      this.rowSelection = this.rows.map(() => false)
+      // this.rowSelection = this.rows.map(() => false)
+      this.rowSelection.map((r) => [false,r[1]])
       this.rowAllSelected = false
     },
     emitRowClick (row) {

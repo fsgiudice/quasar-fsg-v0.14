@@ -45,8 +45,8 @@
           <tbody>
             <tr v-for="(row, index) in rows" @click="emitRowClick(row)">
               <td v-if="config.selection">
-                <q-checkbox v-if="config.selection === 'multiple' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[index]"></q-checkbox>
-                <q-radio v-else-if="config.selection === 'single' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[0]" :val="index"></q-radio>
+                <q-checkbox v-if="config.selection === 'multiple' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[index][0]"></q-checkbox>
+                <q-radio v-else-if="config.selection === 'single' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[0][0]" :val="index"></q-radio>
               </td>
               <td v-for="col in cols" :data-th="col.label" :style="formatStyle(col, row[col.field])" :class="formatClass(col, row[col.field])">
                 <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
@@ -93,8 +93,8 @@
           <table-sticky :no-header="!hasHeader" :sticky-cols="leftStickyColumns" :cols="cols" :sorting="sorting" :selection="config.selection" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected" :selectAllRowsLabel="selectAllLabel">
             <tr v-for="(row, index) in rows" :key="row.__lastUpdate" :style="rowStyle" @click="emitRowClick(row)">
               <td v-if="config.selection">
-                <q-checkbox v-if="config.selection === 'multiple' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[index]"></q-checkbox>
-                <q-radio v-else-if="config.selection === 'single' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[0]" :val="index"></q-radio>
+                <q-checkbox v-if="config.selection === 'multiple' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[index][0]"></q-checkbox>
+                <q-radio v-else-if="config.selection === 'single' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[0][0]" :val="index"></q-radio>
               </td>
               <td v-for="(col, index) in leftCols" :style="formatStyle(col, row[col.field])" :class="formatClass(col, row[col.field])">
                 <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
@@ -210,12 +210,16 @@ export default {
         }
         // add function to select/unselect row
         row.__select = () => {
-          this.rowSelection[row.__index] = true
+          // this.rowSelection[row.__index] = true
+          let s = this.rowSelection.find(r => r[1] === row.__index)
+          s[0] = true
           this.updateSelection()
           row.__lastUpdate = row.__index + '_' + Date.now()
         }
         row.__unselect = () => {
-          this.rowSelection[row.__index] = false
+          // this.rowSelection[row.__index] = false
+          let s = this.rowSelection.find(r => r[1] === row.__index)
+          s[0] = false
           this.updateSelection()
           row.__lastUpdate = row.__index + '_' + Date.now()
         }
