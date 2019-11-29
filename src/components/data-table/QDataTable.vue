@@ -24,6 +24,8 @@
       </div>
     </template>
 
+    <table-pagination v-if="isPaginationDisplayed" :disabled="!isPaginationEnabled" :pagination="pagination" :entries="pagination.entries" :labels="labels"></table-pagination>
+
     <div class="q-data-table-toolbar upper-toolbar row reverse-wrap items-center justify-end q-data-table-selection" v-show="toolbar === 'selection'">
       <div class="col">
         {{ rowsSelected }}
@@ -60,9 +62,11 @@
     </template>
 
     <div v-else class="q-data-table-container" @wheel="mouseWheel" @mousewheel="mouseWheel" @DOMMouseScroll="mouseWheel">
+
       <div v-if="hasHeader" class="q-data-table-head" ref="head" :style="{marginRight: scroll.vert}">
         <table-content head :cols="cols" :sorting="sorting" :scroll="scroll" :selection="config.selection" @sort="setSortField" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected" :selectAllRowsLabel="selectAllLabel"></table-content>
       </div>
+
       <div
         class="q-data-table-body"
         :style="bodyStyle"
@@ -134,7 +138,7 @@
       </template-->
     </div>
 
-    <table-pagination v-if="config.pagination" :pagination="pagination" :entries="pagination.entries" :labels="labels"></table-pagination>
+    <table-pagination v-if="isPaginationDisplayed" :disabled="!isPaginationEnabled" :pagination="pagination" :entries="pagination.entries" :labels="labels"></table-pagination>
   </div>
 </template>
 
@@ -240,6 +244,37 @@ export default {
 
       return rows
     },
+
+    isPaginationDisplayed () {
+      let isDisplayed = false
+      let pagination = this.config.pagination
+      // debugger
+      if (pagination) {
+         if (pagination.hasOwnProperty('displayed')) {
+           isDisplayed = (typeof pagination.displayed === 'function' ? this.config.pagination.displayed() : this.config.pagination.displayed)
+         }
+         else {
+           isDisplayed = true
+         }
+      }
+      return isDisplayed
+    },
+
+    isPaginationEnabled () {
+      let isEnabled = false
+      let pagination = this.config.pagination
+      // debugger
+      if (pagination) {
+         if (pagination.hasOwnProperty('enabled')) {
+           isEnabled = (typeof pagination.enabled === 'function' ? pagination.enabled() : pagination.enabled)
+         }
+         else {
+           isEnabled = true
+         }
+      }
+      return isEnabled
+    },
+
     rowStyle () {
       if (this.config.rowHeight) {
         return {height: this.config.rowHeight}

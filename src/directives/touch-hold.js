@@ -53,10 +53,10 @@ export default {
 
     el.__qtouchhold = ctx
     updateBinding(el, binding)
-    el.addEventListener('touchstart', ctx.start)
-    el.addEventListener('touchend', ctx.abort)
+    el.addEventListener('touchstart', ctx.start, {passive: true})
+    el.addEventListener('touchend', ctx.abort, {passive: true})
     if (mouse) {
-      el.addEventListener('touchmove', ctx.abort)
+      el.addEventListener('touchmove', ctx.abort, {passive: true})
       el.addEventListener('mousedown', ctx.mouseStart)
     }
   },
@@ -65,9 +65,9 @@ export default {
   },
   unbind (el, binding) {
     let ctx = el.__qtouchhold
-    el.removeEventListener('touchstart', ctx.start)
-    el.removeEventListener('touchend', ctx.abort)
-    el.removeEventListener('touchmove', ctx.abort)
+    el.removeEventListener('touchstart', ctx.start, {passive: true})
+    el.removeEventListener('touchend', ctx.abort, {passive: true})
+    el.removeEventListener('touchmove', ctx.abort, {passive: true})
     el.removeEventListener('mousedown', ctx.mouseStart)
     document.removeEventListener('mousemove', ctx.mouseAbort)
     document.removeEventListener('mouseup', ctx.mouseAbort)

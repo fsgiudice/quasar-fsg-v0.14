@@ -19,12 +19,12 @@ export default {
   watch: {
     'data' (value) {
       // console.log('row-selection - dati modificati', value)
-      // if (typeof value !== 'Array' || value.length === 0) {
-      //   this.rowAllSelected = false
-      // }
-      this.clearSelection ()
-      this.rowAllSelected = false
-      this.rowSelection = getRowSelection(this.rows, this.config.selection, this.multipleSelection)
+      if (typeof value !== 'Array' || value.length === 0) {
+        this.rowAllSelected = false
+      }
+      // this.clearSelection ()
+      // this.rowAllSelected = false
+      // this.rowSelection = getRowSelection(this.rows, this.config.selection, this.multipleSelection)
     },
     'rowsSelected' (value) {
       if (value === 0) {
@@ -129,7 +129,7 @@ export default {
     rowsUnselectAll () {
       // console.log('rowsUnselectAll')
       // this.rowSelection = this.rows.map(() => false)
-      this.rowSelection.map((r) => [false,r[1]])
+      this.rowSelection = this.rowSelection.map((r) => [false,r[1]])
     },
     clearSelection () {
       if (!this.multipleSelection) {
@@ -137,7 +137,7 @@ export default {
         return
       }
       // this.rowSelection = this.rows.map(() => false)
-      this.rowSelection.map((r) => [false,r[1]])
+      this.rowSelection = this.rowSelection.map((r) => [false,r[1]])
       this.rowAllSelected = false
     },
     emitRowClick (row) {

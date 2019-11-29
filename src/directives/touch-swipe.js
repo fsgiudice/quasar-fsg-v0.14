@@ -134,9 +134,9 @@ export default {
     if (mouse) {
       el.addEventListener('mousedown', ctx.start)
     }
-    el.addEventListener('touchstart', ctx.start)
-    el.addEventListener('touchmove', ctx.move)
-    el.addEventListener('touchend', ctx.end)
+    el.addEventListener('touchstart', ctx.start, {passive: true})
+    el.addEventListener('touchmove', ctx.move, {passive: true})
+    el.addEventListener('touchend', ctx.end, {passive: true})
   },
   update (el, binding) {
     if (binding.oldValue !== binding.value) {
@@ -145,10 +145,10 @@ export default {
   },
   unbind (el, binding) {
     let ctx = el.__qtouchswipe
-    el.removeEventListener('touchstart', ctx.start)
+    el.removeEventListener('touchstart', ctx.start, {passive: true})
     el.removeEventListener('mousedown', ctx.start)
-    el.removeEventListener('touchmove', ctx.move)
-    el.removeEventListener('touchend', ctx.end)
+    el.removeEventListener('touchmove', ctx.move, {passive: true})
+    el.removeEventListener('touchend', ctx.end, {passive: true})
     delete el.__qtouchswipe
   }
 }

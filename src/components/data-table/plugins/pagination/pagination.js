@@ -11,7 +11,8 @@ const defaultOptions = [
 ]
 
 function parseOptions (opts) {
-  return [{ label: 'All', value: 0 }].concat(
+  // return [{ label: 'All', value: 0 }].concat(
+  return [].concat(
     opts.map(opt => {
       return {
         label: '' + opt,
@@ -43,7 +44,7 @@ export default {
         }
       }
 
-      options[0].label = this.labels.all
+      options[0].label = this.labels.all || 'All'
 
       return {
         get page () { return self.$data._pagination.page },
@@ -54,7 +55,8 @@ export default {
           let rowsPerPage = self.$data._pagination.rowsPerPage
           if (rowsPerPage == null) {
             if (cfg && typeof cfg.rowsPerPage !== 'undefined') {
-              rowsPerPage = cfg.rowsPerPage
+              // rowsPerPage = cfg.rowsPerPage
+              rowsPerPage = (typeof cfg.rowsPerPage === 'function' ? cfg.rowsPerPage() : cfg.rowsPerPage)
             }
             else {
               rowsPerPage = 0
