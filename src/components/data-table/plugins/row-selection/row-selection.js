@@ -2,7 +2,8 @@ function getRowSelection (rows, selection, multiple) {
   if (!selection) {
     return []
   }
-  let result = multiple ? rows.map((r) => [false, r.__index]) : [false, -1]
+  // debugger
+  let result = multiple ? rows.map((r) => [false, r.__index]) : [-1]
   return result
 }
 
@@ -59,7 +60,7 @@ export default {
       if (this.multipleSelection) {
         return this.rowSelection.filter(r => r[0]).length
       }
-      return this.rowSelection.length && this.rowSelection[0][0] ? 1 : 0
+      return this.rowSelection.length && this.rowSelection[0] !== -1 ? 1 : 0
     },
     selectedRows () {
       if (this.multipleSelection) {
@@ -70,11 +71,11 @@ export default {
           })
       }
 
-      if (!this.rowSelection.length || this.rowSelection[0][1] === -1) {
+      if (!this.rowSelection.length || this.rowSelection[0] === -1) {
         return []
       }
       const
-        index = this.rowSelection[0][1],
+        index = this.rowSelection[0],
         row = this.data[index]
 
       return [{index, data: row}]
@@ -112,6 +113,9 @@ export default {
       }
     },
     rowsSelectAll () {
+      if (!this.multipleSelection) {
+        return
+      }
       // console.log('rowsSelectAll')
       // this.rowSelection = this.rows.map((row) => (typeof this.config.selectable === 'function' ? this.config.selectable(row) : true))
       // debugger
@@ -127,13 +131,17 @@ export default {
       })
     },
     rowsUnselectAll () {
+      if (!this.multipleSelection) {
+        this.rowSelection = [-1]
+        return
+      }
       // console.log('rowsUnselectAll')
       // this.rowSelection = this.rows.map(() => false)
       this.rowSelection = this.rowSelection.map((r) => [false,r[1]])
     },
     clearSelection () {
       if (!this.multipleSelection) {
-        this.rowSelection = [false, -1]
+        this.rowSelection = [-1]
         return
       }
       // this.rowSelection = this.rows.map(() => false)
