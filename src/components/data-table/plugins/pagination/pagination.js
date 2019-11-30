@@ -11,8 +11,7 @@ const defaultOptions = [
 ]
 
 function parseOptions (opts) {
-  // return [{ label: 'All', value: 0 }].concat(
-  return [].concat(
+  return [{ label: 'All', value: 0 }].concat(
     opts.map(opt => {
       return {
         label: '' + opt,
