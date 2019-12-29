@@ -76,6 +76,7 @@
       :min="min"
       :max="max"
       :step="inputStep"
+      :maxDecimals="maxDecimals"
 
       :type="inputType"
       :value="value"

@@ -34,6 +34,7 @@ export default {
   },
   watch: {
     'sorting.dir' () {
+      // console.log('watch sorting.dir')
       this.resetBody()
     }
   },

@@ -204,6 +204,15 @@ export default {
       // let rows = clone(this.data) // no clone, as I can need to update real data
       let rows = this.data
 
+      if (this.filtering.terms) {
+        rows = this.filter(rows)
+      }
+
+      if (this.sorting.field) {
+        this.sort(rows)
+      }
+
+      // we have to set index AFTER filter and sorting
       rows.forEach((row, i) => {
         row.__index = i
         // set lastUpdate as reactive
@@ -228,14 +237,6 @@ export default {
           row.__lastUpdate = row.__index + '_' + Date.now()
         }
       })
-
-      if (this.filtering.terms) {
-        rows = this.filter(rows)
-      }
-
-      if (this.sorting.field) {
-        this.sort(rows)
-      }
 
       this.pagination.entries = rows.length
       if (this.pagination.rowsPerPage > 0) {

@@ -77,7 +77,7 @@ export default {
       const
         index = this.rowSelection[0],
         row = this.data[index]
-
+      // console.log('index = ', index, ', row = ', row)
       return [{index, data: row}]
     }
   },
