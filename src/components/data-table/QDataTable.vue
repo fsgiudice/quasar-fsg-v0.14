@@ -24,7 +24,7 @@
       </div>
     </template>
 
-    <table-pagination v-if="isPaginationDisplayed" :disabled="!isPaginationEnabled" :pagination="pagination" :entries="pagination.entries" :labels="labels"></table-pagination>
+    <table-pagination v-if="isPaginationDisplayed" :disabled="!isPaginationEnabled" :pagination="pagination" :entries="pagination.entries" :labels="labels" @paginationRowsChanged="emitRowsChanged"></table-pagination>
 
     <div class="q-data-table-toolbar upper-toolbar row reverse-wrap items-center justify-end q-data-table-selection" v-show="toolbar === 'selection'">
       <div class="col">
@@ -48,7 +48,7 @@
             <tr v-for="(row, index) in rows" @click="emitRowClick(row)">
               <td v-if="config.selection">
                 <q-checkbox v-if="config.selection === 'multiple' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[index][0]"></q-checkbox>
-                <q-radio v-else-if="config.selection === 'single' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[0]" :val="row.__index"></q-radio>
+                <q-radio v-else-if="config.selection === 'single' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[0]" :val="index"></q-radio>
               </td>
               <td v-for="col in cols" :data-th="col.label" :style="formatStyle(col, row[col.field])" :class="formatClass(col, row[col.field])">
                 <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
@@ -98,7 +98,7 @@
             <tr v-for="(row, index) in rows" :key="row.__lastUpdate" :style="rowStyle" @click="emitRowClick(row)">
               <td v-if="config.selection">
                 <q-checkbox v-if="config.selection === 'multiple' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[index][0]"></q-checkbox>
-                <q-radio v-else-if="config.selection === 'single' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[0]" :val="row.__index"></q-radio>
+                <q-radio v-else-if="config.selection === 'single' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[0]" :val="index"></q-radio>
               </td>
               <td v-for="(col, index) in leftCols" :style="formatStyle(col, row[col.field])" :class="formatClass(col, row[col.field])">
                 <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
@@ -138,7 +138,7 @@
       </template-->
     </div>
 
-    <table-pagination v-if="isPaginationDisplayed" :disabled="!isPaginationEnabled" :pagination="pagination" :entries="pagination.entries" :labels="labels"></table-pagination>
+    <table-pagination v-if="isPaginationDisplayed" :disabled="!isPaginationEnabled" :pagination="pagination" :entries="pagination.entries" :labels="labels" @paginationRowsChanged="emitRowsChanged"></table-pagination>
   </div>
 </template>
 
@@ -204,14 +204,6 @@ export default {
       // let rows = clone(this.data) // no clone, as I can need to update real data
       let rows = this.data
 
-      if (this.filtering.terms) {
-        rows = this.filter(rows)
-      }
-
-      if (this.sorting.field) {
-        this.sort(rows)
-      }
-
       // we have to set index AFTER filter and sorting
       rows.forEach((row, i) => {
         row.__index = i
@@ -224,19 +216,28 @@ export default {
         // add function to select/unselect row
         row.__select = () => {
           // this.rowSelection[row.__index] = true
-          let s = this.rowSelection.find(r => r[1] === row.__index)
+          let s = this.rowSelection.find(r => r[2] === row.__index)
           s[0] = true
           this.updateSelection()
           row.__lastUpdate = row.__index + '_' + Date.now()
         }
         row.__unselect = () => {
           // this.rowSelection[row.__index] = false
-          let s = this.rowSelection.find(r => r[1] === row.__index)
+          let s = this.rowSelection.find(r => r[2] === row.__index)
           s[0] = false
           this.updateSelection()
           row.__lastUpdate = row.__index + '_' + Date.now()
         }
       })
+
+      if (this.filtering.terms) {
+        rows = this.filter(rows)
+        // console.log('filter: rows = ', rows)
+      }
+
+      if (this.sorting.field) {
+        this.sort(rows)
+      }
 
       this.pagination.entries = rows.length
       if (this.pagination.rowsPerPage > 0) {

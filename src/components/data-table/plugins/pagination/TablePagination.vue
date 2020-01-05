@@ -6,6 +6,7 @@
         v-model="pagination.rowsPerPage"
         :options="pagination.options"
         @input="resetPage"
+        @change="changedPages"
         class="inline no-margin"
         align="right"
         simple
@@ -55,6 +56,9 @@ export default {
   methods: {
     resetPage () {
       this.pagination.page = 1
+    },
+    changedPages () {
+      this.$emit('paginationRowsChanged', this.pagination.rowsPerPage)
     }
   }
 }

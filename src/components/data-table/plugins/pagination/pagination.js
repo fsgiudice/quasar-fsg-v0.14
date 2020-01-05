@@ -83,6 +83,9 @@ export default {
         return rows
       }
       return rows.slice((page - 1) * number, page * number)
+    },
+    emitRowsChanged (rows) {
+      this.$emit('rowsPerPageChanged', rows)
     }
   },
   components: {
