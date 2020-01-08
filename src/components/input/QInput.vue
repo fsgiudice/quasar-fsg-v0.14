@@ -56,6 +56,40 @@
     </template>
 
     <input
+      v-else-if="isMoney"
+      ref="input"
+      class="col q-input-target"
+      :class="[`text-${align}`]"
+
+      :name="name"
+      :placeholder="inputPlaceholder"
+      :pattern="pattern"
+      :disabled="disable"
+      :readonly="readonly"
+      :maxlength="maxLength"
+      :autocapitalize="autocapitalize"
+      :autocomplete="autocomplete"
+      :autocorrect="autocorrect"
+      :spellcheck="spellcheck"
+      v-bind="attributes"
+
+      :min="min"
+      :max="max"
+      :step="inputStep"
+      :maxDecimals="maxDecimals"
+
+      type="tel"
+      :value="value"
+      v-money="moneyConfig"
+      @input="__set"
+
+      @focus="__onFocus"
+      @blur="__onBlur"
+      @keydown="__onKeydown"
+      @keyup="__onKeyup"
+    />
+
+    <input
       v-else
       ref="input"
       class="col q-input-target"
@@ -126,9 +160,12 @@ import { QInputFrame } from '../input-frame'
 import { QResizeObservable } from '../observables'
 import { QSpinner } from '../spinner'
 
+import { VMoney } from 'v-money'
+
 export default {
   name: 'q-input',
   mixins: [FrameMixin, InputMixin],
+  directives: {money: VMoney},
   components: {
     QInputFrame,
     QSpinner,
@@ -146,6 +183,8 @@ export default {
     noPassToggle: Boolean,
     readonly: Boolean,
     attributes: Object,
+
+    moneyConfig: Object,
 
     min: Number,
     max: Number,
@@ -194,6 +233,9 @@ export default {
     },
     isTextarea () {
       return this.type === 'textarea'
+    },
+    isMoney () {
+      return this.type === 'money'
     },
     isLoading () {
       return this.loading || this.shadow.loading
