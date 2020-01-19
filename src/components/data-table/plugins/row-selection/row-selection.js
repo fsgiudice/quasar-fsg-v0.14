@@ -25,7 +25,8 @@ export default {
   watch: {
     'data' (value) {
       // console.log('row-selection - dati modificati', value)
-      if (typeof value !== 'Array' || value.length === 0) {
+      // if (typeof value !== 'Array' || value.length === 0) {
+      if (Array.isArray(value) || value.length === 0) {
         this.rowAllSelected = false
       }
       // this.clearSelection ()

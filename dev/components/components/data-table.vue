@@ -69,9 +69,10 @@
     </div>
 
     <q-data-table
-      :data="table"
+      :data="tabledata"
       :config="config"
       :columns="columns"
+      :loading="loading"
       @refresh="refresh"
       @selection="selection"
       @rowclick="rowClick"
@@ -117,7 +118,19 @@ export default {
         this.table.splice(row.index, 1)
       })
     },
+    loadData () {
+      this.tabledata = []
+      // console.log('table = ', table)
+      this.loading = true
+      // console.log('app loadData() start - loading', this.loading)
+      setTimeout(() => {
+        this.tabledata = table
+        this.loading = false
+        // console.log('app loadData() end - loading', this.loading)
+      }, 3000)
+    },
     refresh (done) {
+      this.loadData()
       this.timeout = setTimeout(() => {
         done()
       }, 5000)
@@ -134,7 +147,8 @@ export default {
   },
   data () {
     return {
-      table,
+      tabledata: [],
+      loading: false,
       config: {
         title: 'Data Table',
         refresh: true,
@@ -263,6 +277,12 @@ export default {
       }
       this.config.bodyStyle = style
     }
+  },
+
+  mounted () {
+    this.$nextTick(() => {
+      this.loadData()
+    })
   }
 }
 </script>

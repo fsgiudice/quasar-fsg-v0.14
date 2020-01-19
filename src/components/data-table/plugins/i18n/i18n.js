@@ -22,8 +22,16 @@ export default {
       return labels
     },
     message () {
+      // console.log('messaggio - loading', this.loading)
+
       if (this.rows.length) {
         return false
+      }
+
+      // debugger
+
+      if (this.loading) {
+        return (this.config.messages && this.config.messages.dataLoading) || '<i class="material-icons">search</i> Loading data, please wait.'
       }
 
       if (this.filtering.terms) {
