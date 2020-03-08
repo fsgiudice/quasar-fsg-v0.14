@@ -45,7 +45,7 @@
       <div v-else :style="bodyStyle" style="overflow: auto">
         <table class="q-table horizontal-separator responsive" ref="body">
           <tbody>
-            <tr v-for="(row, index) in rows" @click="emitRowClick(row)">
+            <tr v-for="(row, index) in rows" @click="emitRowClick(row)" @mouseover="emitRowHover(row, true)" @mouseleave="emitRowHover(row, false)">
               <td v-if="config.selection">
                 <q-checkbox v-if="config.selection === 'multiple' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[index][0]"></q-checkbox>
                 <q-radio v-else-if="config.selection === 'single' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[0]" :val="index"></q-radio>
@@ -75,7 +75,7 @@
       >
         <div v-if="message" class="q-data-table-message row flex-center" v-html="message"></div>
         <table-content v-else :cols="cols" :selection="config.selection">
-          <tr v-for="row in rows" :style="rowStyle" @click="emitRowClick(row)">
+          <tr v-for="row in rows" :style="rowStyle" @click="emitRowClick(row)" @mouseover="emitRowHover(row, true)" @mouseleave="emitRowHover(row, false)">
             <td v-if="config.selection"></td>
             <td v-if="leftStickyColumns" :colspan="leftStickyColumns"></td>
             <td v-for="col in regularCols" :style="formatStyle(col, row[col.field])" :class="formatClass(col, row[col.field])">
@@ -95,7 +95,7 @@
           :style="{bottom: scroll.horiz}"
         >
           <table-sticky :no-header="!hasHeader" :sticky-cols="leftStickyColumns" :cols="cols" :sorting="sorting" :selection="config.selection" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected" :selectAllRowsLabel="selectAllLabel">
-            <tr v-for="(row, index) in rows" :key="row.__lastUpdate" :style="rowStyle" @click="emitRowClick(row)">
+            <tr v-for="(row, index) in rows" :key="row.__lastUpdate" :style="rowStyle" @click="emitRowClick(row)" @mouseover="emitRowHover(row, true)" @mouseleave="emitRowHover(row, false)">
               <td v-if="config.selection">
                 <q-checkbox v-if="config.selection === 'multiple' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[index][0]"></q-checkbox>
                 <q-radio v-else-if="config.selection === 'single' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[0]" :val="index"></q-radio>
@@ -390,6 +390,9 @@ export default {
     },
     formatClass (col, value) {
       return typeof col.classes === 'function' ? col.classes(value) : col.classes
+    },
+    emitRowHover (row, isHover) {
+      this.$emit('rowhover', row, isHover)
     }
   }
 }

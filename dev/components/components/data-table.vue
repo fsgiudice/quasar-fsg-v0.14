@@ -76,6 +76,7 @@
       @refresh="refresh"
       @selection="selection"
       @rowclick="rowClick"
+      @rowhover="rowHover"
     >
       <template slot="col-message" slot-scope="cell">
         <span class="light-paragraph">{{cell.data}}</span>
@@ -140,6 +141,9 @@ export default {
     },
     rowClick (row) {
       console.log('clicked on a row', row)
+    },
+    rowHover (row, isHover) {
+      console.log('row hover', row, isHover)
     }
   },
   beforeDestroy () {
