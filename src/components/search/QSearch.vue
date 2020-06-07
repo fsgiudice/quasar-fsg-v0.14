@@ -17,6 +17,10 @@
     :inverted="inverted"
     :dark="dark"
     :max-length="maxLength"
+    :autocapitalize="autocapitalize"
+    :autocomplete="autocomplete"
+    :autocorrect="autocorrect"
+    :spellcheck="spellcheck"
 
     :color="color"
     :before="controlBefore"
