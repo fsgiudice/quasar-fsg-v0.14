@@ -40,6 +40,14 @@
       ></q-icon>
 
       <q-icon
+        v-if="files.length > 0"
+        slot="after"
+        class="q-if-control"
+        name="delete"
+        @click="__removeAll"
+      ></q-icon>
+
+      <q-icon
         v-if="!uploading"
         slot="after"
         name="add"
@@ -50,6 +58,7 @@
         <input
           type="file"
           ref="file"
+          :name="name"
           class="q-uploader-input absolute-full cursor-pointer"
           :accept="extensions"
           v-bind.prop="{multiple: multiple}"
@@ -65,6 +74,7 @@
         :disabled="length === 0"
         @click="upload"
       ></q-icon>
+
     </q-input-frame>
 
     <div class="q-uploader-files scroll">
@@ -198,6 +208,13 @@ export default {
       let files = Array.prototype.slice.call(e.target.files)
       this.$refs.file.value = ''
 
+      // prima rimuovo omonimi
+      files.forEach(f => {
+        if (this.files.some(e => e.name === f.name)) {
+          this.__remove(f)
+        }
+      })
+
       files = files.filter(file => !this.queue.some(f => file.name === f.name))
         .map(file => {
           initFile(file)
@@ -252,6 +269,11 @@ export default {
       this.files = this.files.filter(obj => obj.name !== name)
       this.__computeTotalSize()
     },
+
+    __removeAll () {
+      this.files.forEach(f => this.__remove(f))
+    },
+
     __removeUploaded () {
       this.files = this.files.filter(f => !f.__doneUploading)
       this.__computeTotalSize()
