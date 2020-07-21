@@ -13,6 +13,7 @@
     :before="before"
     :after="after"
     :color="color"
+    :multiple="multiple"
 
     :focused="focused"
     :length="length"
@@ -112,6 +113,8 @@
       :step="inputStep"
       :maxDecimals="maxDecimals"
 
+      :multiple="multiple"
+
       :type="inputType"
       :value="value"
       @input="__set"
@@ -185,6 +188,8 @@ export default {
     attributes: Object,
 
     moneyConfig: Object,
+
+    multiple: Boolean,
 
     min: Number,
     max: Number,
@@ -276,20 +281,34 @@ export default {
     },
 
     __set (e) {
-      let val = e.target ? e.target.value : e
-      if (val !== this.value) {
-        if (this.isNumber) {
-          if (val === '') {
-            val = null
+      if (e.target.type === 'file') {
+        // // get files
+        // var files = e.target.files || e.dataTransfer.files
+        // // console.log('files: ', files)
+        // var fileNames = []
+        // Object.keys(files)
+        //   .forEach(k => fileNames.push(files[k].name))
+        // // convert to string
+        // fileNames = fileNames.join()
+        // this.$emit('input', fileNames)
+        this.$emit('change', e)
+      }
+      else {
+        let val = e.target ? e.target.value : e
+        if (val !== this.value) {
+          if (this.isNumber) {
+            if (val === '') {
+              val = null
+            }
+            else {
+              val = Number.isInteger(this.maxDecimals)
+                ? parseFloat(val).toFixed(this.maxDecimals)
+                : parseFloat(val)
+            }
           }
-          else {
-            val = Number.isInteger(this.maxDecimals)
-              ? parseFloat(val).toFixed(this.maxDecimals)
-              : parseFloat(val)
-          }
+          this.$emit('input', val)
+          this.$emit('change', val)
         }
-        this.$emit('input', val)
-        this.$emit('change', val)
       }
     },
     __updateArea () {
