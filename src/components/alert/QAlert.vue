@@ -12,6 +12,7 @@
         v-if="active"
         class="q-alert row no-wrap"
         :class="classes"
+        :style="extstyles"
       >
         <div class="q-alert-icon row col-auto flex-center">
           <q-icon :name="alertIcon"></q-icon>
@@ -73,6 +74,7 @@ export default {
     },
     inline: Boolean,
     icon: String,
+    styles: [String, Object],
     dismissible: Boolean,
     actions: Array,
     position: {
@@ -121,6 +123,9 @@ export default {
     },
     classes () {
       return `shadow-2 bg-${this.color}`
+    },
+    extstyles () {
+      return this.styles
     }
   },
   methods: {

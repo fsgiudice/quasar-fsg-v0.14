@@ -97,7 +97,8 @@ export default {
         leave: 'bounceOutRight',
         color: 'warning',
         icon: 'wifi',
-        html: `A text with your alert's<br><strong>awesome</strong> message`,
+        html: `A veryyyyyyyyyyyyyyy long text with your alert's<br><strong>awesome</strong> message`,
+        styles: 'max-width: 100px !important;',
         position: 'top-right',
         actions: [
           {
