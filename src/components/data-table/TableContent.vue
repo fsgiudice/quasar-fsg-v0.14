@@ -1,10 +1,12 @@
 <template>
   <table class="q-table horizontal-separator" :style="tableStyle">
+
     <colgroup>
       <col v-if="selection" style="width: 36px;" />
       <col v-for="col in cols" :style="{width: col.width}" />
-      <col v-if="head && scroll.horiz" :style="{width: scroll.horiz}" />
+      <col v-if="(head || foot) && scroll.horiz" :style="{width: scroll.horiz}" />
     </colgroup>
+
     <thead v-if="head">
       <tr>
         <th v-if="selection">
@@ -13,6 +15,7 @@
           </q-checkbox>
           <span v-else>&nbsp;</span>
         </th>
+
         <th
           v-for="col in cols"
           :class="{sortable: col.sort}"
@@ -26,12 +29,31 @@
           <span v-html="col.label"></span>
           <q-tooltip v-if="col.label" v-html="col.label"></q-tooltip>
         </th>
-        <th v-if="head && scroll.horiz"></th>
+
+        <th v-if="(head || foot) && scroll.horiz"></th>
       </tr>
     </thead>
-    <tbody v-else>
+
+    <tbody v-else-if="!head && !foot">
       <slot></slot>
     </tbody>
+
+    <tfoot v-if="foot">
+      <tr>
+        <td>
+          <span>&nbsp;</span>
+        </td>
+
+        <td
+          v-for="col in cols"
+        >
+          <span v-html="(typeof col.footLabel === 'function' ? col.footLabel() : col.footLabel)"></span>
+          <q-tooltip v-if="col.footLabel" v-html="col.footLabel"></q-tooltip>
+        </td>
+
+        <td v-if="(head || foot) && scroll.horiz"></td>
+      </tr>
+    </tfoot>
   </table>
 </template>
 
@@ -50,6 +72,7 @@ export default {
   props: {
     cols: Array,
     head: Boolean,
+    foot: Boolean,
     sorting: Object,
     scroll: Object,
     selection: [String, Boolean],
