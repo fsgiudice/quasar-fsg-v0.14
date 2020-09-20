@@ -157,6 +157,7 @@ export default {
         title: 'Data Table',
         refresh: true,
         noHeader: false,
+        noFooter: false,
         columnPicker: true,
         leftStickyColumns: 0,
         rightStickyColumns: 2,
@@ -211,7 +212,8 @@ export default {
             return value
           },
           width: '80px',
-          classes: 'text-center'
+          classes: 'text-center',
+          footLabel: 'Footer Service'
         },
         {
           label: 'Time Range',

@@ -1,5 +1,7 @@
 <template>
   <div class="q-data-table">
+
+    <!-- toolbar area start -->
     <template v-if="hasToolbar && toolbar === ''">
       <div class="q-data-table-toolbar upper-toolbar row reverse-wrap items-center justify-end">
         <div v-if="config.format || config.title" class="q-data-table-title ellipsis col" v-html="displayFormat"></div>
@@ -23,9 +25,13 @@
         </div>
       </div>
     </template>
+    <!-- toolbar area end -->
 
+    <!-- pagination top area start -->
     <table-pagination v-if="isPaginationDisplayed" :disabled="!isPaginationEnabled" :pagination="pagination" :entries="pagination.entries" :labels="labels" @paginationRowsChanged="emitRowsChanged"></table-pagination>
+    <!-- pagination top area end -->
 
+    <!-- selection info area start -->
     <div class="q-data-table-toolbar upper-toolbar row reverse-wrap items-center justify-end q-data-table-selection" v-show="toolbar === 'selection'">
       <div class="col">
         {{ rowsSelected }}
@@ -37,11 +43,17 @@
         <slot name="selection" :rows="selectedRows"></slot>
       </div>
     </div>
+    <!-- selection info area end -->
 
+    <!-- filter area start -->
     <table-filter v-if="filteringCols.length" :filtering="filtering" :columns="filteringCols" :labels="labels"></table-filter>
+    <!-- filter area end -->
 
+    <!-- table responsive start -->
     <template v-if="responsive">
+
       <div v-if="message" class="q-data-table-message row flex-center" v-html="message"></div>
+
       <div v-else :style="bodyStyle" style="overflow: auto">
         <table class="q-table horizontal-separator responsive" ref="body">
           <tbody>
@@ -59,14 +71,30 @@
           </tbody>
         </table>
       </div>
-    </template>
 
+    </template>
+    <!-- table responsive end -->
+
+    <!-- table regular start -->
     <div v-else class="q-data-table-container" @wheel="mouseWheel" @mousewheel="mouseWheel" @DOMMouseScroll="mouseWheel">
 
+      <!-- table regular header row start -->
       <div v-if="hasHeader" class="q-data-table-head" ref="head" :style="{marginRight: scroll.vert}">
-        <table-content head :cols="cols" :sorting="sorting" :scroll="scroll" :selection="config.selection" @sort="setSortField" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected" :selectAllRowsLabel="selectAllLabel"></table-content>
+        <table-content
+          head
+          :cols="cols"
+          :sorting="sorting"
+          :scroll="scroll"
+          :selection="config.selection"
+          @sort="setSortField"
+          @selectAllRows="selectAllRows"
+          :rowAllSelection="rowAllSelected"
+          :selectAllRowsLabel="selectAllLabel"
+        ></table-content>
       </div>
+      <!-- table regular header row end -->
 
+      <!-- table regular body rows start -->
       <div
         class="q-data-table-body"
         :style="bodyStyle"
@@ -74,16 +102,30 @@
         @scroll="scrollHandler"
       >
         <div v-if="message" class="q-data-table-message row flex-center" v-html="message"></div>
-        <table-content v-else :cols="cols" :selection="config.selection">
-          <tr v-for="row in rows" :style="rowStyle" @click="emitRowClick(row)" @mouseover="emitRowHover(row, true)" @mouseleave="emitRowHover(row, false)">
+
+        <table-content v-else
+          :cols="cols"
+          :selection="config.selection"
+        >
+          <tr v-for="row in rows"
+            :style="rowStyle"
+            @click="emitRowClick(row)"
+            @mouseover="emitRowHover(row, true)"
+            @mouseleave="emitRowHover(row, false)"
+          >
+
             <td v-if="config.selection"></td>
+
             <td v-if="leftStickyColumns" :colspan="leftStickyColumns"></td>
+
             <td v-for="col in regularCols" :style="formatStyle(col, row[col.field])" :class="formatClass(col, row[col.field])">
               <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
                 <span v-html="format(row, col)"></span>
               </slot>
             </td>
+
             <td v-if="rightStickyColumns" :colspan="rightStickyColumns"></td>
+
           </tr>
         </table-content>
       </div>
@@ -94,7 +136,17 @@
           ref="stickyLeft"
           :style="{bottom: scroll.horiz}"
         >
-          <table-sticky :no-header="!hasHeader" :sticky-cols="leftStickyColumns" :cols="cols" :sorting="sorting" :selection="config.selection" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected" :selectAllRowsLabel="selectAllLabel">
+          <table-sticky
+            :no-header="!hasHeader"
+            :no-footer="!hasFooter"
+            :sticky-cols="leftStickyColumns"
+            :cols="cols"
+            :sorting="sorting"
+            :selection="config.selection"
+            @selectAllRows="selectAllRows"
+            :rowAllSelection="rowAllSelected"
+            :selectAllRowsLabel="selectAllLabel"
+          >
             <tr v-for="(row, index) in rows" :key="row.__lastUpdate" :style="rowStyle" @click="emitRowClick(row)" @mouseover="emitRowHover(row, true)" @mouseleave="emitRowHover(row, false)">
               <td v-if="config.selection">
                 <q-checkbox v-if="config.selection === 'multiple' && (typeof config.selectable === 'function' ? config.selectable(row) : true)" v-model="rowSelection[index][0]"></q-checkbox>
@@ -109,9 +161,23 @@
           </table-sticky>
         </div>
         <div v-if="hasHeader" class="q-data-table-sticky-left" :style="{bottom: scroll.horiz}">
-          <table-sticky head :sticky-cols="leftStickyColumns" :scroll="scroll" :cols="cols" :sorting="sorting" @sort="setSortField" :selection="config.selection" @selectAllRows="selectAllRows" :rowAllSelection="rowAllSelected" :selectAllRowsLabel="selectAllLabel"></table-sticky>
+          <table-sticky head
+            :sticky-cols="leftStickyColumns"
+            :scroll="scroll"
+            :cols="cols"
+            :sorting="sorting"
+            @sort="setSortField"
+            :selection="config.selection"
+            @selectAllRows="selectAllRows"
+            :rowAllSelection="rowAllSelected"
+            :selectAllRowsLabel="selectAllLabel"
+          ></table-sticky>
+        </div>
+        <div v-if="hasFooter" class="q-data-table-head" ref="foot" :style="{marginRight: scroll.vert}">
+          <table-content foot :cols="cols" :scroll="scroll"></table-content>
         </div>
       </template>
+      <!-- table regular end -->
 
       <!-- TOFIX: currently disabled right sticky columns as there is an error on building header -->
       <!--template v-if="!message && rightStickyColumns">
@@ -138,7 +204,10 @@
       </template-->
     </div>
 
+    <!-- pagination bottom area start -->
     <table-pagination v-if="isPaginationDisplayed" :disabled="!isPaginationEnabled" :pagination="pagination" :entries="pagination.entries" :labels="labels" @paginationRowsChanged="emitRowsChanged"></table-pagination>
+    <!-- pagination bottom area end -->
+
   </div>
 </template>
 
@@ -331,6 +400,9 @@ export default {
     },
     hasHeader () {
       return !this.config.noHeader
+    },
+    hasFooter () {
+      return !this.config.noFooter
     },
     selectAllLabel () {
       return this.config && this.config.labels && this.config.labels.selectAllCheckBox

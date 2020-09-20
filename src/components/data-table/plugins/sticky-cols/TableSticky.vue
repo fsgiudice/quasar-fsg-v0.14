@@ -1,9 +1,11 @@
 <template>
   <table class="q-table horizontal-separator">
+
     <colgroup>
       <col v-if="selection" style="width: 36px;" />
       <col v-for="col in cols" :style="{width: col.width}" />
     </colgroup>
+
     <thead v-if="!noHeader">
       <tr>
         <th v-if="selection">
@@ -33,9 +35,21 @@
       </tr>
     </thead>
 
-    <tbody v-if="!head">
+    <tbody v-if="!head && !foot">
       <slot></slot>
     </tbody>
+
+    <tfoot v-if="!noFooter">
+      <tr>
+        <td
+          v-for="col in cols"
+        >
+          <span v-html="(typeof col.footLabel === 'function' ? col.footLabel() : col.footLabel)"></span>
+          <q-tooltip v-if="col.footLabel" v-html="col.footLabel"></q-tooltip>
+        </td>
+      </tr>
+    </tfoot>
+
   </table>
 </template>
 
@@ -55,7 +69,9 @@ export default {
     stickyCols: Number,
     cols: Array,
     head: Boolean,
+    foot: Boolean,
     noHeader: Boolean,
+    noFooter: Boolean,
     right: Boolean,
     sorting: Object,
     scroll: Object,
