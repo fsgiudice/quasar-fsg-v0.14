@@ -29,7 +29,8 @@ function create (opts) {
       }
 
       return h(
-        QAlert, {
+        QAlert,
+        {
           style: {
             padding: '18px'
           },

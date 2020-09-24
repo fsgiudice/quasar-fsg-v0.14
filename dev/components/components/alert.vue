@@ -45,7 +45,7 @@
 
     <q-alert
       v-for="type in ['positive', 'info', 'negative', 'warning']"
-      :key="type"
+      :key="'1_' + type"
       :color="type"
       dismissible
       style="margin-bottom: 1.5rem"
@@ -55,7 +55,7 @@
 
     <q-alert
       v-for="type in ['positive', 'info', 'negative', 'warning']"
-      :key="type"
+      :key="'2_' + type"
       :color="type"
       style="margin-bottom: 1.5rem"
     >
@@ -78,6 +78,9 @@ export default {
     return {
       visible: true,
       visible2: false,
+      countDown: {
+        id: 10
+      },
       diss: true,
       actions: [{
         label: 'Snooze',
@@ -98,9 +101,18 @@ export default {
         color: 'warning',
         icon: 'wifi',
         html: `A veryyyyyyyyyyyyyyy long text with your alert's<br><strong>awesome</strong> message`,
-        styles: 'max-width: 100px !important;',
+        styles: 'max-width: 300px;',
         position: 'top-right',
+        timeout: 15,
         actions: [
+          {
+            label: (counter) => {
+              return (counter > 0 ? 'Close in ' + counter : 'Closing now')
+            },
+            handler () {
+              console.log('counter handler')
+            }
+          },
           {
             label: 'Snooze',
             handler () {
