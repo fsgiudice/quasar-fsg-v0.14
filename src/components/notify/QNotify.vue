@@ -1,5 +1,5 @@
 <template>
-  <div :class="containerClass" class="q-alert-container">
+  <div :class="containerClass" class="q-notify-container">
     <q-transition
       :name="name"
       :enter="enter"
@@ -10,32 +10,35 @@
     >
       <div
         v-if="active"
-        class="q-alert row no-wrap"
+        class="q-notify row no-wrap"
         :key="__id"
         :class="classes"
         :style="extstyles"
       >
-        <div class="q-alert-icon row col-auto flex-center">
-          <q-icon :name="alertIcon"></q-icon>
+        <div class="q-notify-icon row col-auto flex-center">
+          <q-icon :name="notifyIcon"></q-icon>
         </div>
-        <div class="q-alert-content col self-center">
+        <div v-if="badge > 1" class="q-notify-badge row col-auto flex-center">
+          {{badge }}
+        </div>
+        <div class="q-notify-content col self-center">
           <slot></slot>
           <div
             v-if="actions && actions.length"
-            class="q-alert-actions row items-center"
+            class="q-notify-actions row items-center"
           >
             <span
               v-for="(btn, i) in actions"
               :key="'btn_' + i"
               @click="dismiss(btn.handler, __id)"
-              v-html="typeof btn.label === 'function' ? btn.label(countDown(__id)) : btn.label"
+              v-html="htmlContent(btn,__id)"
               class="uppercase"
             ></span>
           </div>
         </div>
         <div
           v-if="dismissible"
-          class="q-alert-close self-top col-auto"
+          class="q-notify-close self-top col-auto"
         >
           <q-icon
             name="close"
@@ -53,22 +56,29 @@ import typeIcon from '../../utils/type-icons'
 import { QIcon } from '../icon'
 import { QTransition } from '../transition'
 
-let _idAlert = 0
+// let _idNotify = 0
 // let alerts = []
 
 export default {
-  name: 'q-alert',
+  name: 'q-notify',
   components: {
     QIcon,
     QTransition
   },
   props: {
-    id: Number,
+    id: {
+      type: Number,
+      default: 0
+    },
     value: {
       type: Boolean,
       default: true
     },
     duration: Number,
+    badge: {
+      type: Number,
+      default: 1
+    },
     name: String,
     enter: String,
     leave: String,
@@ -97,18 +107,22 @@ export default {
   },
   data () {
     return {
+      _idNotify: 0,
       active: this.value,
-      counter: this.timeout
+      counter: this.timeout,
+      lastBadge: this.badge,
+      timer: null
     }
   },
   created (e) {
-    // _idAlert++
-    console.log('created', e, this)
-    // alerts.push({id: _idAlert, counter: this.timeout})
+    // this._idNotify++
+    // console.log('created', e, this)
+    // alerts.push({id: _idNotify, counter: this.timeout})
   },
-  beforeCreate (e) {
-    _idAlert++
-    // alerts.push({id: _idAlert, counter: this.timeout})
+  beforeCreate () {
+    this._idNotify++
+    console.log('created', this._idNotify, this)
+    // alerts.push({id: _idNotify, counter: this.timeout})
   },
   watch: {
     value (v) {
@@ -122,12 +136,12 @@ export default {
   },
   computed: {
     __id () {
-      let id = this.id ? 'u_' + this.id : 'a_' + _idAlert
+      let id = this.id ? 'u_' + this.id : 'a_' + this._idNotify
       console.log('__id: ', id)
       return id
     },
 
-    alertIcon () {
+    notifyIcon () {
       return this.icon || typeIcon[this.color] || typeIcon.warning
     },
     containerClass () {
@@ -139,7 +153,7 @@ export default {
           cls.push('row justify-center')
           pos = pos.split('-')[0]
         }
-        cls.push(`fixed-${pos}${pos === 'left' || pos === 'right' ? ' row items-center' : ''} z-alert`)
+        cls.push(`fixed-${pos}${pos === 'left' || pos === 'right' ? ' row items-center' : ''} z-notify`)
       }
       if (this.inline) {
         cls.push('inline-block')
@@ -153,17 +167,40 @@ export default {
       return this.styles
     }
   },
+  mounted () {
+    let vm = this
+    if (this.timeout > 0) {
+      this.counter = this.timeout
+      this.timer = setInterval(() => vm.countDown(), 1000)
+    }
+  },
+  beforeDestroy () {
+    if (this.timer) {
+      clearInterval(this.timer)
+    }
+  },
   methods: {
-    countDown (id) {
+    htmlContent (btn) {
+      if (typeof btn.label === 'function') {
+        return btn.label(this.counter)
+      }
+      else {
+        return btn.label
+      }
+    },
+    countDown () {
       // debugger
-      // console.log('countDown id', id)
+      // console.log('countDown this.counter', this.counter)
       if (this.timeout > 0) {
+        if (this.lastBadge !== this.badge) {
+          this.counter = this.timeout
+          this.lastBadge = this.badge
+          // this.$forceUpdate()
+        }
+
         this.$nextTick(() => {
           if (this.counter > 0) {
-            setTimeout(() => {
-              // console.log('timeout countdown counter', this.__id, this.counter)
-              this.counter--
-            }, 1000)
+            this.counter--
           }
           else {
             setTimeout(() => {
@@ -173,12 +210,7 @@ export default {
           }
         })
         // console.log('display countdown id', this.__id, this.counter)
-        return this.counter
       }
-      // else if (this.timeout === -1 && !this.dismissible)
-      //   {
-      //
-      // }
     },
     dismiss (fn, id) {
       this.active = false

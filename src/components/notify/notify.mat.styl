@@ -1,0 +1,48 @@
+.q-notify-container
+  pointer-events none
+
+.q-notify
+  color $notify-color
+  background $notify-background
+  border-radius $notify-border-radius
+  min-width $notify-min-width
+  pointer-events all
+
+.q-notify-icon, .q-notify-content
+  padding $notify-padding
+
+.q-notify-icon
+  font-size 150%
+  background rgba(0, 0, 0, .2)
+
+.q-notify-close
+  padding 0
+  .q-icon
+    padding .9rem
+
+.q-notify-actions
+  margin-top .5rem
+  border-top 1px solid rgba(0, 0, 0, .2)
+  padding-top .5rem
+  font-size .8rem
+  span
+    cursor pointer
+  span + span
+    margin-left 16px
+
+.q-notify-badge
+  padding: 2px 6px
+  border-radius: 6px
+  font-size: 10px
+  line-height: 10px
+  font-weight: normal
+  vertical-align: baseline
+  position: relative
+  top: -5px
+  right: 40px
+  cursor: inherit
+  color: #fff
+  background-color: $negative
+  height: 24px
+  margin-right: -18px
+

@@ -1,9 +1,10 @@
 import { textStyle } from './list-utils'
 
-function text (h, name, val, n) {
+function text (h, name, val, n, color) {
   n = parseInt(n, 10)
   return h('div', {
-    staticClass: `q-item-${name}${n === 1 ? ' ellipsis' : ''}`,
+    // staticClass: `q-item-${name}${n === 1 ? ' ellipsis' : ''}`,
+    staticClass: `q-item-${name}${color ? ` text-${color}` : ''}${n === 1 ? ' ellipsis' : ''}`,
     style: textStyle(n),
     domProps: { innerHTML: val }
   })
@@ -14,8 +15,10 @@ export default {
   functional: true,
   props: {
     label: String,
+    labelColor: String,
     labelLines: [String, Number],
     sublabel: String,
+    sublabelColor: String,
     sublabelLines: [String, Number],
     inset: Boolean,
     tag: {
@@ -31,10 +34,10 @@ export default {
       child = []
 
     if (prop.label) {
-      child.push(text(h, 'label', prop.label, prop.labelLines))
+      child.push(text(h, 'label', prop.label, prop.labelLines, prop.labelColor))
     }
     if (prop.sublabel) {
-      child.push(text(h, 'sublabel', prop.sublabel, prop.sublabelLines))
+      child.push(text(h, 'sublabel', prop.sublabel, prop.sublabelLines, prop.sublabelColor))
     }
 
     child.push(ctx.children)

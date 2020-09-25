@@ -26,7 +26,7 @@
 
     <q-slide-transition>
       <div v-show="active">
-        <div class="q-collapsible-sub-item relative-position" :class="{indent: indent}">
+        <div class="q-collapsible-sub-item relative-position" :class="[{indent: indent}, containerClass]" :style="containerStyle">
           <slot></slot>
         </div>
       </div>
@@ -56,6 +56,8 @@ export default {
     opened: Boolean,
     disable: Boolean,
     indent: Boolean,
+    containerClass: String,
+    containerStyle: String,
     group: String,
     iconToggle: Boolean,
 
@@ -66,10 +68,12 @@ export default {
     insetSeparator: Boolean,
 
     icon: String,
+    iconColor: String,
     image: String,
     avatar: String,
     letter: String,
     label: String,
+    labelColor: String,
     sublabel: String,
     labelLines: [String, Number],
     sublabelLines: [String, Number]
@@ -102,12 +106,15 @@ export default {
         multiline: this.multiline,
 
         icon: this.icon,
+        leftColor: this.iconColor,
         image: this.image,
         avatar: this.avatar,
         letter: this.letter,
 
         label: this.label,
+        labelColor: this.labelColor,
         sublabel: this.sublabel,
+        sublabelColor: this.sublabelColor,
         labelLines: this.labelLines,
         sublabelLines: this.sublabelLines
       }

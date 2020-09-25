@@ -2,12 +2,12 @@
   <div class="layout-padding">
 
     <div style="margin-bottom: 25px">
-      <q-btn color="primary" @click="alertAsMethod">Show Alert as Method</q-btn>
-      <q-btn color="primary" @click="alertAsMethod2">Show Alert 2 as Method</q-btn>
-      <q-btn color="primary" @click="reset">Reset First 2 Alerts</q-btn>
+      <q-btn color="primary" @click="notifyAsMethod">Show Notify as Method</q-btn>
+      <q-btn color="primary" @click="notifyAsMethod2">Show Notify 2 as Method</q-btn>
+      <q-btn color="primary" @click="reset">Reset First 2 Notifys</q-btn>
     </div>
 
-    <q-alert
+    <q-notify
       color="brown"
       icon="cloud"
       enter="bounceInLeft"
@@ -18,22 +18,22 @@
       dismissible
     >
       Lorem ipsum dolor sit amet.
-    </q-alert>
+    </q-notify>
 
     <q-btn @click="visible2 = !visible2" label="Toggle HERE" />
-    <q-alert
+    <q-notify
       type="negative"
-      ref="destroyableAlert"
+      ref="destroyableNotify"
       v-model="visible2"
       dismissible
       style="margin-bottom: 1.5rem"
       :actions="[{label: 'Snooze', handler () {}}]"
     >
       Lorem ipsum dolor sit amet.
-    </q-alert>
+    </q-notify>
 
     <q-toggle v-model="diss" label="Dismiss next one" />
-    <q-alert
+    <q-notify
       type="negative"
       style="margin-bottom: 1.5rem"
       dismissible
@@ -42,9 +42,9 @@
       :actions="actions"
     >
       No anim, dismiss test.
-    </q-alert>
+    </q-notify>
 
-    <q-alert
+    <q-notify
       v-for="type in ['positive', 'info', 'negative', 'warning']"
       :key="'1_' + type"
       :color="type"
@@ -52,26 +52,26 @@
       style="margin-bottom: 1.5rem"
     >
       Lorem ipsum dolor sit amet.
-    </q-alert>
+    </q-notify>
 
-    <q-alert
+    <q-notify
       v-for="type in ['positive', 'info', 'negative', 'warning']"
       :key="'2_' + type"
       :color="type"
       style="margin-bottom: 1.5rem"
     >
       Non dismissible. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </q-alert>
+    </q-notify>
   </div>
 </template>
 
 <script>
-import { Alert } from 'quasar'
+import { Notify } from 'quasar'
 // import 'quasar-extras/animate/bounceInLeft.css'
 // import 'quasar-extras/animate/bounceInRight.css'
 // import 'quasar-extras/animate/bounceOutRight.css'
 
-Alert.create({html: 'Warning, warning Will Robinson!'})
+Notify.create({html: 'Warning, warning Will Robinson!'})
 
 export default {
 
@@ -95,14 +95,14 @@ export default {
     dismissed () {
       console.log('@dismiss')
     },
-    alertAsMethod () {
-      Alert.create({
+    notifyAsMethod () {
+      Notify.create({
         id: 1111,
         enter: 'bounceInRight',
         leave: 'bounceOutRight',
         color: 'warning',
         icon: 'wifi',
-        html: `A veryyyyyyyyyyyyyyy long text with your alert's<br><strong>awesome</strong> message`,
+        html: `A veryyyyyyyyyyyyyyy long text with your notify's<br><strong>awesome</strong> message`,
         styles: 'max-width: 300px;',
         position: 'top-right',
         timeout: 15,
@@ -130,13 +130,13 @@ export default {
         ]
       })
     },
-    alertAsMethod2 () {
-      Alert.create({
+    notifyAsMethod2 () {
+      Notify.create({
         enter: 'bounceInRight',
         leave: 'bounceOutRight',
         color: 'warning',
         icon: 'wifi',
-        html: `A veryyyyyyyyyyyyyyy long text with your alert's<br><strong>awesome</strong> message`,
+        html: `A veryyyyyyyyyyyyyyy long text with your notify's<br><strong>awesome</strong> message`,
         styles: 'max-width: 300px;',
         position: 'top-right',
         timeout: 15,

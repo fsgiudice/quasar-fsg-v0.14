@@ -53,7 +53,9 @@ export default {
 
     push(child, h, QItemMain, slot.main, replace, {
       label: cfg.label,
+      labelColor: cfg.labelColor,
       sublabel: cfg.sublabel,
+      sublabelColor: cfg.sublabelColor,
       labelLines: cfg.labelLines,
       sublabelLines: cfg.sublabelLines,
       inset: cfg.inset
