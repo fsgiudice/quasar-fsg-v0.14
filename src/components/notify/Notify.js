@@ -3,19 +3,23 @@ import { Vue } from '../../deps'
 import extend from '../../utils/extend'
 
 let notifyGroups = []
-// let idNotify = 0
+let notifyPosition = []
+let idGroup = 0
 
 function create (opts) {
-  console.log('opts: ', opts)
+  // console.log('opts: ', opts)
+
+  let notifyPos = opts.position || 'top-right'
 
   let notify = notifyGroups.find(e => {
-    return e.state.id === opts.id
+    return (typeof e.state.group !== 'undefined' && e.state.group === opts.group)
   })
   let state
   let node
+  let mainNode
 
   if (notify) {
-    console.log('notify trovato: ', notify)
+    // console.log('notify trovato: ', notify)
 
     state = notify.state
     node = notify.node
@@ -26,16 +30,48 @@ function create (opts) {
   else {
     notify = {}
     notifyGroups.push(notify)
-    console.log('notify aggiunto: ', notify)
+    // console.log('notify aggiunto: ', notify)
+
+    let position = notifyPosition.find(e => {
+      return (typeof e.position !== 'undefined' && e.position === notifyPos)
+    })
+    if (position) {
+      mainNode = position.mainNode
+    }
+    else {
+      position = {}
+      notifyPosition.push(position)
+
+      position.position = notifyPos
+
+      mainNode = document.createElement('div')
+      document.body.appendChild(mainNode)
+      position.mainNode = mainNode
+
+      // mainNode.classList.add('q-notification-list')
+      // mainNode.classList.add('column')
+
+      const
+        vert = ['left', 'center', 'right'].includes(notifyPos) ? 'center' : (notifyPos.indexOf('top') > -1 ? 'top' : 'bottom'),
+        align = notifyPos.indexOf('left') > -1 ? 'start' : (notifyPos.indexOf('right') > -1 ? 'end' : 'center'),
+        classes = ['left', 'right'].includes(notifyPos) ? `items-${notifyPos === 'left' ? 'start' : 'end'} justify-center` : (notifyPos === 'center' ? 'flex-center' : `items-${align}`)
+
+      let positionClass = `q-notifications-list q-notifications-list--${vert} fixed-${notifyPos.indexOf('center') > -1 ? vert : notifyPos} column no-wrap ${classes}`
+      positionClass.split(' ').forEach(e => mainNode.classList.add(e))
+      // console.log('mainNode.classList', mainNode.classList)
+    }
+
+    // node = document.createElement('div')
+    // document.body.appendChild(node)
 
     node = document.createElement('div')
-    document.body.appendChild(node)
+    mainNode.appendChild(node)
 
     state = extend(
-      {position: 'top-right'},
+      {position: notifyPos},
       opts,
       {
-        // id: idNotify++,
+        group: (typeof opts.group !== 'undefined' ? opts.group : '__nogroup__' + idGroup++),
         badge: 1,
         value: true,
         appear: true,
@@ -67,7 +103,7 @@ function create (opts) {
         QNotify,
         {
           style: {
-            padding: '18px'
+            padding: '2px'
           },
           on,
           props: state
@@ -85,7 +121,7 @@ function create (opts) {
 
   notify.vm = vm
 
-  console.log('notify: ', notify)
+  // console.log('notify: ', notify)
 
   vm.$mount(node)
 

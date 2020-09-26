@@ -7,6 +7,24 @@
       <q-btn color="primary" @click="reset">Reset First 2 Notifys</q-btn>
     </div>
 
+    <div style="margin-bottom: 25px">
+      <q-btn color="primary" @click="notifyAsPath('top-left', 'bounceInDown', 'bounceOutUp')">TL</q-btn>
+      <q-btn color="primary" @click="notifyAsPath('top-center', 'bounceInDown', 'bounceOutUp')">TC</q-btn>
+      <q-btn color="primary" @click="notifyAsPath('top-right', 'bounceInDown', 'bounceOutUp')">TR</q-btn>
+    </div>
+
+    <div style="margin-bottom: 25px">
+      <q-btn color="primary" @click="notifyAsPath('left', 'bounceInLeft', 'bounceOutLeft')">L</q-btn>
+      <q-btn color="primary" @click="notifyAsPath('center', 'fadeIn', 'fadeOut')">C</q-btn>
+      <q-btn color="primary" @click="notifyAsPath('right', 'bounceInRight', 'bounceOutRight')">R</q-btn>
+    </div>
+
+    <div style="margin-bottom: 25px">
+      <q-btn color="primary" @click="notifyAsPath('bottom-left', 'bounceInUp', 'bounceOutDown')">BL</q-btn>
+      <q-btn color="primary" @click="notifyAsPath('bottom-center', 'bounceInUp', 'bounceOutDown')">BC</q-btn>
+      <q-btn color="primary" @click="notifyAsPath('bottom-right', 'bounceInUp', 'bounceOutDown')">BR</q-btn>
+    </div>
+
     <q-notify
       color="brown"
       icon="cloud"
@@ -97,7 +115,7 @@ export default {
     },
     notifyAsMethod () {
       Notify.create({
-        id: 1111,
+        group: 1111,
         enter: 'bounceInRight',
         leave: 'bounceOutRight',
         color: 'warning',
@@ -139,6 +157,41 @@ export default {
         html: `A veryyyyyyyyyyyyyyy long text with your notify's<br><strong>awesome</strong> message`,
         styles: 'max-width: 300px;',
         position: 'top-right',
+        timeout: 15,
+        actions: [
+          {
+            label: (counter) => {
+              return (counter > 0 ? 'Close in ' + counter : 'Closing now')
+            },
+            handler () {
+              console.log('counter handler')
+            }
+          },
+          {
+            label: 'Snooze',
+            handler () {
+              console.log('acting')
+            }
+          },
+          {
+            label: 'Abort',
+            handler () {
+              console.log('aborting')
+            }
+          }
+        ]
+      })
+    },
+    notifyAsPath (position = 'top-center', enter = 'bounceInDown', leave = 'bounceOutUp') {
+      Notify.create({
+        // group: 1112,
+        enter: enter,
+        leave: leave,
+        color: 'warning',
+        icon: 'wifi',
+        html: `A veryyyyyyyyyyyyyyy long text with your notify's<br><strong>awesome</strong> message`,
+        styles: 'max-width: 300px;',
+        position: position,
         timeout: 15,
         actions: [
           {

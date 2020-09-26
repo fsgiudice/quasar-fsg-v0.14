@@ -56,7 +56,7 @@ import typeIcon from '../../utils/type-icons'
 import { QIcon } from '../icon'
 import { QTransition } from '../transition'
 
-// let _idNotify = 0
+let _idNotify = 0
 // let alerts = []
 
 export default {
@@ -66,9 +66,8 @@ export default {
     QTransition
   },
   props: {
-    id: {
-      type: Number,
-      default: 0
+    group: {
+      type: [String, Number]
     },
     value: {
       type: Boolean,
@@ -101,7 +100,7 @@ export default {
       validator: v => [
         'top', 'top-right', 'right', 'bottom-right',
         'bottom', 'bottom-left', 'left', 'top-left',
-        'top-center', 'bottom-center'
+        'center', 'top-center', 'bottom-center'
       ].includes(v)
     }
   },
@@ -115,13 +114,13 @@ export default {
     }
   },
   created (e) {
+    this._idNotify = _idNotify++
+    // console.log('created', this._idNotify, this)
     // this._idNotify++
     // console.log('created', e, this)
     // alerts.push({id: _idNotify, counter: this.timeout})
   },
   beforeCreate () {
-    this._idNotify++
-    console.log('created', this._idNotify, this)
     // alerts.push({id: _idNotify, counter: this.timeout})
   },
   watch: {
@@ -136,8 +135,9 @@ export default {
   },
   computed: {
     __id () {
-      let id = this.id ? 'u_' + this.id : 'a_' + this._idNotify
-      console.log('__id: ', id)
+      // let id = this.id ? 'u_' + this.id : 'a_' + this._idNotify
+      let id = this._idNotify
+      // console.log('__id: ', id)
       return id
     },
 
@@ -153,11 +153,23 @@ export default {
           cls.push('row justify-center')
           pos = pos.split('-')[0]
         }
-        cls.push(`fixed-${pos}${pos === 'left' || pos === 'right' ? ' row items-center' : ''} z-notify`)
+        cls.push(`${pos === 'left' || pos === 'right' ? ' row items-center' : ''}`)
       }
       if (this.inline) {
         cls.push('inline-block')
       }
+      // let pos = this.position
+      //
+      // if (pos) {
+      //   if (pos.indexOf('center') > -1) {
+      //     cls.push('row justify-center')
+      //     pos = pos.split('-')[0]
+      //   }
+      //   cls.push(`fixed-${pos}${pos === 'left' || pos === 'right' ? ' row items-center' : ''} z-notify`)
+      // }
+      // if (this.inline) {
+      //   cls.push('inline-block')
+      // }
       return cls
     },
     classes () {
@@ -206,7 +218,7 @@ export default {
             setTimeout(() => {
               this.dismiss(null, this.__id)
               this.counter = this.timeout
-            }, 2000)
+            }, 1000)
           }
         })
         // console.log('display countdown id', this.__id, this.counter)
