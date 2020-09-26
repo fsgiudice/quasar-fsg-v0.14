@@ -18,7 +18,7 @@
         <div class="q-notify-icon row col-auto flex-center">
           <q-icon :name="notifyIcon"></q-icon>
         </div>
-        <div v-if="badge > 1" class="q-notify-badge row col-auto flex-center">
+        <div v-if="!noBadge && badge > 1" class="q-notify-badge row col-auto flex-center">
           {{badge }}
         </div>
         <div class="q-notify-content col self-center">
@@ -78,6 +78,7 @@ export default {
       type: Number,
       default: 1
     },
+    noBadge: Boolean,
     name: String,
     enter: String,
     leave: String,

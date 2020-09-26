@@ -116,6 +116,7 @@ export default {
     notifyAsMethod () {
       Notify.create({
         group: 1111,
+        noBadge: true,
         enter: 'bounceInRight',
         leave: 'bounceOutRight',
         color: 'warning',
@@ -150,6 +151,7 @@ export default {
     },
     notifyAsMethod2 () {
       Notify.create({
+        group: 1212,
         enter: 'bounceInRight',
         leave: 'bounceOutRight',
         color: 'warning',
@@ -185,6 +187,7 @@ export default {
     notifyAsPath (position = 'top-center', enter = 'bounceInDown', leave = 'bounceOutUp') {
       Notify.create({
         // group: 1112,
+        // noBadge: true,
         enter: enter,
         leave: leave,
         color: 'warning',
