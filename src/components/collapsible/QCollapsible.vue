@@ -75,6 +75,7 @@ export default {
     label: String,
     labelColor: String,
     sublabel: String,
+    sublabelColor: String,
     labelLines: [String, Number],
     sublabelLines: [String, Number]
   },
